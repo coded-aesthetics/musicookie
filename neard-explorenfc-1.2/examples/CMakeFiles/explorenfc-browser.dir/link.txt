@@ -1,0 +1,1 @@
+/usr/bin/cc      CMakeFiles/explorenfc-browser.dir/browser.c.o  -o explorenfc-browser -rdynamic -lglib-2.0 -lgthread-2.0 -pthread -lglib-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgthread-2.0 

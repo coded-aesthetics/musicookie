@@ -1,0 +1,1 @@
+gdbus-codegen --interface-prefix org.neard. --generate-c-code src/generated-code --c-namespace Neard --c-generate-object-manager dbus/org.neard.xml

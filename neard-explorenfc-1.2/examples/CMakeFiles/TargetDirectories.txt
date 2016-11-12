@@ -1,0 +1,3 @@
+/home/pi/nfc-software/neard-explorenfc-1.2/examples/CMakeFiles/explorenfc-basic.dir
+/home/pi/nfc-software/neard-explorenfc-1.2/examples/CMakeFiles/explorenfc-browser.dir
+/home/pi/nfc-software/neard-explorenfc-1.2/examples/CMakeFiles/explorenfc-wifi-connect.dir

@@ -1,0 +1,12 @@
+PROJECT_NAME = @PACKAGE_NAME@
+PROJECT_NUMBER = @PACKAGE_VERSION@
+INPUT = @top_srcdir@/src
+OUTPUT_DIRECTORY = @top_srcdir@/doc/doxygen
+OPTIMIZE_OUTPUT_FOR_C  = YES
+MARKDOWN_SUPPORT       = YES
+INPUT                  = @top_srcdir@/src/
+FILE_PATTERNS          = *.h *.c
+EXCLUDE                = @top_srcdir@/src/generated-code.h @top_srcdir@/src/generated-code.c
+GENERATE_HTML          = YES
+HTML_OUTPUT            = .
+GENERATE_LATEX         = NO

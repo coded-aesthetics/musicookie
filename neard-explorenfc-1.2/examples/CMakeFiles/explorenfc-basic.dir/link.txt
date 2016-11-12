@@ -1,0 +1,1 @@
+/usr/bin/cc      CMakeFiles/explorenfc-basic.dir/basic.c.o  -o explorenfc-basic -rdynamic -lglib-2.0 -lgthread-2.0 -pthread -lglib-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgthread-2.0 

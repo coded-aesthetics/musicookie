@@ -1,0 +1,38 @@
+Device hierarchy
+================
+
+Service		org.neard
+Interface	org.neard.Device
+Object path	[variable prefix]/{nfc0}/{device0, device1...}
+
+Method		void Push(dict attributes)
+
+			Creates an NDEF record from the attributes dictionary.
+
+			The attributes argument should at least contain a
+			record type. The rest of the attributes dictionary
+			depends on the record type:
+
+			 -----------------------------------------------------
+			|       Type     |     Additional dictionary keys     |
+			 -----------------------------------------------------
+			|       Text     | Encoding, Language, Representation |
+			 -----------------------------------------------------
+			|       URI      |                URI                 |
+			 -----------------------------------------------------
+			|   SmartPoster  |                URI                 |
+			 -----------------------------------------------------
+			|    Handover    |  Carrier (wifi or/and bluetooth)   |
+			 -----------------------------------------------------
+			| StaticHandover |  Carrier (wifi or/and bluetooth)   |
+			 -----------------------------------------------------
+			|       MIME     |      MIME, Payload (optional)      |
+			 -----------------------------------------------------
+
+			Possible Errors: org.neard.Error.PermissionDenied
+					 org.neard.Error.InvalidArguments
+					 org.neard.Error.InProgress
+
+Properties	object Adapter [readonly]
+
+			The object path of the adapter the device belongs to.

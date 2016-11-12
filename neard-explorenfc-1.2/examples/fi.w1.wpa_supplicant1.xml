@@ -1,0 +1,148 @@
+<node>
+   <interface name="fi.w1.wpa_supplicant1">
+      <annotation name="org.gtk.GDBus.C.Name" value="WPASupplicant"/>
+      <method name="CreateInterface">
+         <arg name="args" type="a{sv}" direction="in" />
+         <arg name="path" type="o" direction="out" />
+      </method>
+      <method name="RemoveInterface">
+         <arg name="path" type="o" direction="in" />
+      </method>
+      <method name="GetInterface">
+         <arg name="ifname" type="s" direction="in" />
+         <arg name="path" type="o" direction="out" />
+      </method>
+      <signal name="InterfaceAdded">
+         <arg name="path" type="o" direction="in" />
+         <arg name="properties" type="a{sv}" direction="in" />
+      </signal>
+      <signal name="InterfaceRemoved">
+         <arg name="path" type="o" direction="in" />
+      </signal>
+      <signal name="PropertiesChanged">
+         <arg name="properties" type="a{sv}" direction="in" />
+      </signal>
+      <property name="DebugLevel" type="s" access="readwrite" />
+      <property name="DebugTimestamp" type="b" access="readwrite" />
+      <property name="DebugShowKeys" type="b" access="readwrite" />
+      <property name="Interfaces" type="ao" access="read" />
+      <property name="EapMethods" type="as" access="read" />
+   </interface>
+   <interface name="fi.w1.wpa_supplicant1.Interface">
+   	  <annotation name="org.gtk.GDBus.C.Name" value="WPASupplicantInterfaze"/>
+      <signal name="NetworkRequest">
+         <arg name="path" type="o" direction="in" />
+         <arg name="field" type="s" direction="in" />
+         <arg name="text" type="s" direction="in" />
+      </signal>
+      <method name="Scan">
+         <arg name="args" type="a{sv}" direction="in" />
+      </method>
+      <method name="Disconnect" />
+      <method name="AddNetwork">
+         <arg name="args" type="a{sv}" direction="in" />
+         <arg name="path" type="o" direction="out" />
+      </method>
+      <method name="RemoveNetwork">
+         <arg name="path" type="o" direction="in" />
+      </method>
+      <method name="RemoveAllNetworks" />
+      <method name="SelectNetwork">
+         <arg name="path" type="o" direction="in" />
+      </method>
+      <method name="NetworkReply">
+         <arg name="path" type="o" direction="in" />
+         <arg name="field" type="s" direction="in" />
+         <arg name="value" type="s" direction="in" />
+      </method>
+      <method name="AddBlob">
+         <arg name="name" type="s" direction="in" />
+         <arg name="data" type="ay" direction="in" />
+      </method>
+      <method name="GetBlob">
+         <arg name="name" type="s" direction="in" />
+         <arg name="data" type="ay" direction="out" />
+      </method>
+      <method name="RemoveBlob">
+         <arg name="name" type="s" direction="in" />
+      </method>
+      <method name="FlushBSS">
+         <arg name="age" type="u" direction="in" />
+      </method>
+      <signal name="ScanDone">
+         <arg name="success" type="b" direction="in" />
+      </signal>
+      <signal name="BSSAdded">
+         <arg name="path" type="o" direction="in" />
+         <arg name="properties" type="a{sv}" direction="in" />
+      </signal>
+      <signal name="BSSRemoved">
+         <arg name="path" type="o" direction="in" />
+      </signal>
+      <signal name="BlobAdded">
+         <arg name="name" type="s" direction="in" />
+      </signal>
+      <signal name="BlobRemoved">
+         <arg name="name" type="s" direction="in" />
+      </signal>
+      <signal name="NetworkAdded">
+         <arg name="path" type="o" direction="in" />
+         <arg name="properties" type="a{sv}" direction="in" />
+      </signal>
+      <signal name="NetworkRemoved">
+         <arg name="path" type="o" direction="in" />
+      </signal>
+      <signal name="NetworkSelected">
+         <arg name="path" type="o" direction="in" />
+      </signal>
+      <signal name="PropertiesChanged">
+         <arg name="properties" type="a{sv}" direction="in" />
+      </signal>
+      <signal name="Certification">
+         <arg name="certification" type="a{sv}" direction="in" />
+      </signal>
+      <property name="Capabilities" type="a{sv}" access="read" />
+      <property name="State" type="s" access="read" />
+      <property name="Scanning" type="b" access="read" />
+      <property name="ApScan" type="u" access="readwrite" />
+      <property name="BSSExpireAge" type="u" access="readwrite" />
+      <property name="BSSExpireCount" type="u" access="readwrite" />
+      <property name="Country" type="s" access="readwrite" />
+      <property name="Ifname" type="s" access="read" />
+      <property name="Driver" type="s" access="read" />
+      <property name="BridgeIfname" type="s" access="read" />
+      <property name="CurrentBSS" type="o" access="read" />
+      <property name="CurrentNetwork" type="o" access="read" />
+      <property name="CurrentAuthMode" type="s" access="read" />
+      <property name="Blobs" type="a{say}" access="read" />
+      <property name="BSSs" type="ao" access="read" />
+      <property name="Networks" type="ao" access="read" />
+      <property name="FastReauth" type="b" access="readwrite" />
+   </interface>
+   <interface name="fi.w1.wpa_supplicant1.Interface.WPS">
+      <annotation name="org.gtk.GDBus.C.Name" value="WPASupplicantInterfazeWPS"/>
+      <method name="Start">
+         <arg name="args" type="a{sv}" direction="in" />
+         <arg name="output" type="a{sv}" direction="out" />
+      </method>
+      <signal name="Event">
+         <arg name="name" type="s" direction="in" />
+         <arg name="args" type="a{sv}" direction="in" />
+      </signal>
+      <signal name="Credentials">
+         <arg name="credentials" type="a{sv}" direction="in" />
+      </signal>
+      <signal name="PropertiesChanged">
+         <arg name="properties" type="a{sv}" direction="in" />
+      </signal>
+      <property name="ProcessCredentials" type="b" access="readwrite" />
+   </interface>
+   <interface name="fi.w1.wpa_supplicant1.Network">
+   <annotation name="org.gtk.GDBus.C.Name" value="WPASupplicantNetwork"/>
+      <signal name="PropertiesChanged">
+         <arg name="properties" type="a{sv}" direction="in" />
+      </signal>
+      <property name="Properties" type="a{sv}" access="readwrite" />
+      <property name="Enabled" type="b" access="readwrite" />
+   </interface>
+</node>

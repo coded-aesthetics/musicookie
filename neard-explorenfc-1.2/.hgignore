@@ -1,0 +1,16 @@
+# use glob syntax.
+syntax: glob
+
+./autom4te.cache
+*.o
+*.d
+*.dirstamp
+*.Po
+*.a
+*.pyc
+*.mmf
+doc/doxygen/*
+.DS_Store
+remotegdb
+Makefile
+Makefile.in

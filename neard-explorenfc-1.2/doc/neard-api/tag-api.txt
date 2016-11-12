@@ -1,0 +1,150 @@
+Tag hierarchy
+================
+
+Service		org.neard
+Interface	org.neard.Tag
+Object path	[variable prefix]/{nfc0}/{tag0, tag1...}
+
+Method		void Write(dict attributes)
+
+			Creates an NDEF record from the attributes dictionary.
+
+			The attribute argument should at least contain a
+			record type and is described by the Record properties.
+			For example, one would add a type, a Language, an
+			Encoding and a Representation for a text record.
+
+			Possible Errors: org.neard.Error.PermissionDenied
+					 org.neard.Error.InvalidArguments
+					 org.neard.Error.InProgress
+
+
+Properties	string Type [readonly]
+
+			The NFC tag type.
+			Possible values are "Type 1", "Type 2", "Type 3",
+			"Type 4", "Type 5", and "NFC-DEP".
+
+		string Protocol [readonly]
+
+			The tag radio protocol.
+			Possible values are "Felica", "MIFARE", "Jewel",
+			and "ISO-DEP".
+
+		boolean ReadOnly [readonly]
+
+			Give the current status of tag's read mode.
+
+		object Adapter [readonly]
+
+			The object path of the adapter the tag belongs to.
+
+		string Iso14443aUid [readonly, optional]
+
+			The tag's unique ID (4, 7 or 10 bytes long) if ISO14443A-compliant
+			
+		string Iso14443aAtqa [readonly]
+		
+		string Iso14443aSak [readonly]
+
+
+
+Record hierarchy
+================
+
+Service		org.neard
+Interface	org.neard.Record
+Object path	[variable prefix]/{nfc0}/{tag0|device}/{record0,record1,...}
+
+Properties	string Type [readonly]
+
+			The NDEF record type name.
+
+			Possible values are "SmartPoster", "Text", "URI",
+			"HandoverRequest", "HandoverSelect", "HandoverCarrier",
+			"AAR" for Android Application Record and "MIME" for
+			RFC 2046 MIME types.
+
+		string Encoding [readonly]
+
+			The character encoding.
+
+			Possible values are "UTF-8" or "UTF-16".
+			This property is only valid for Text and SmartPoster's
+			title records.
+
+		string Language [readonly]
+
+			The ISO/IANA language code (For example "en" or "jp").
+
+			This property is only valid for Text and SmartPoster's
+			title records.
+
+		string Representation [readonly]
+
+			The human readable representation of a text or
+			title record.
+
+			This property is only valid for Text and SmartPoster's
+			title records.
+
+		string URI [readonly]
+
+			The record URI (for example https://nfc-forum.org).
+
+			This is the complete URI, including the scheme and
+			the resource.
+			This property is only valid for SmartPoster's URI
+			records.
+
+		string MIMEType [readonly]
+
+			The URI object MIME type.
+
+			This is a description of the MIME type of the object
+			the URI points at.
+			This is not a mandatory field and is only valid for
+			Smart Posters carrying a URI record.
+
+		uint32 Size [readonly]
+
+			The URI object size.
+
+			This is the size of the object the URI points at.
+			It should be used by applications to decide if they can
+			afford to fetch the object or not.
+			This is not a mandatory field and is only valid for
+			Smart Posters carrying a URI record.
+
+		string Action [readonly]
+
+			The suggested course of action.
+
+			This one is only valid for Smart Posters and is a
+			suggestion only. It can be ignored, and the possible
+			values are "Do" (for example launch the browser),
+			"Save" (for example save the URI in the bookmarks
+			folder, or "Edit" (for example open the URI in an URI
+			editor for the user to modify it.
+
+		string AndroidPackage [readonly]
+
+		        This is the Android Package Name contained in an
+			Android Application Record (AAR). It hints the reader
+			towards launching an Android specific application.
+
+			It is only valid for AAR NDEFs.
+
+ISO14443A-compliant tags
+========================
+Service		org.neard
+Interface	org.neard.iso14443a3Tag
+Object path	[variable prefix]/{nfc0}/{tag0, tag1...}
+
+Properties	string UID [readonly]
+			The tag's unique ID (4, 7 or 10 bytes long)
+			
+		string ATQA [readonly]
+		
+		string SAK [readonly]
+

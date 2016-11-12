@@ -1,0 +1,47 @@
+neard - Near Field Communication daemon
+=======================================
+
+Purpose
+=======
+
+This document describes all the major functionalities
+supported by neard.
+
+
+Reader Mode
+===========
+Supported tags:
+
+  * Type 1: Supported.
+  * Type 2: Supported.
+    * MIFARE classic 1K and 4K supported.
+  * Type 3: Supported.
+  * Type 4: Supported.
+  * Type 5: Supported.
+
+
+Card Emulation Mode
+===================
+Not supported.
+
+
+Writer Mode
+===========
+Supported tags:
+
+  * Type 1: Supported.
+  * Type 2: Supported.
+  * Type 3: Supported.
+  * Type 4: Supported.
+  * Type 5: Supported.
+
+
+Peer To Peer Mode
+=================
+neard reads and write NDEFs from p2p devices, through SNEP and NPP.
+Both initiator and target modes are supported.
+
+
+Handover
+========
+WIP.

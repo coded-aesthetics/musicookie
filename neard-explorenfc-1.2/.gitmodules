@@ -1,0 +1,3 @@
+[submodule "nxprdlib-linux"]
+	path = nxprdlib-linux
+	url = git@bitbucket.org:appnearme/nxprdlib-linux.git

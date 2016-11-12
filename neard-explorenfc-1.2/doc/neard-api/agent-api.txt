@@ -1,0 +1,165 @@
+Agent Manager hierarchy
+=======================
+
+Service		org.neard
+Interface	org.neard.AgentManager
+Object path	/org/neard
+
+Methods		void RegisterHandoverAgent(object path, string carrier)
+
+			Register new handover agent.
+
+			Supported carriers are: 'bluetooth', 'wifi'.
+			Only one registration will be accepted per carrier.
+
+			Possible Errors: org.neard.Error.InvalidArguments
+					 org.neard.Error.AlreadyExists.
+
+		void UnregisterHandoverAgent(object path, string carrier)
+
+			Unregister an existing handover agent.
+
+			Possible Errors: org.neard.Error.InvalidArguments
+
+		void RegisterNDEFAgent(object path, string type)
+
+			Register new NDEF agent.
+
+			When a record matching the registered type is found,
+			the agent will get the whole NDEF as a raw byte stream.
+
+			Possible Errors: org.neard.Error.InvalidArguments
+
+		void UnregisterNDEFAgent(object path, string type)
+
+			Unregister an existing NDEF agent.
+
+			Possible Errors: org.neard.Error.InvalidArguments
+
+
+HandoverAgent hierarchy
+=======================
+
+Service		unique name
+Interface	org.neard.HandoverAgent
+Object path	freely definable
+
+Methods		dict RequestOOB(dict values) [experimental]
+
+			This method gets called when the service daemon
+			needs to get Out Of Band data from the handover
+			agent, typically the BlueZ daemon.
+
+			The service daemon will use this OOB data to build
+			a Handover Request or Select message and send it to
+			remote device.
+
+			Values parameter is optional. It should be a dictionary
+			where the keys are the field names and the values are
+			the actual fields. If provided it should contain remote
+			Out Of Band data received in Handover Request message.
+			Those data will be stored for future use (i.e. when
+			remote initialize pairing) and providing those will not
+			initialize pairing.
+
+			The return value should be a dictionary where the
+			keys are the field names and the values are the
+			actual fields.
+
+			Possible Errors: org.neard.HandoverAgent.Error.InProgress
+					 org.neard.HandoverAgent.Error.Failed
+
+		void PushOOB(dict values) [experimental]
+
+			This method gets called when service daemon received
+			Handover Select message from selector and needs to pass
+			remote Out Of Band data to agent to start handover.
+
+			If there is no Bluetooth adapter or if it doesn't
+			support simple pairing the agent will return an error.
+
+			Agent shall implicitly initialize pairing if needed.
+
+			This function returns when alternative carrier
+			(Bluetooth) is ready to be used i.e. pairing has
+			finished.
+
+			Parameter should be a dictionary where the keys are the
+			field names and the values are the actual fields.
+
+			Possible Errors: org.neard.HandoverAgent.Error.InProgress
+					 org.neard.HandoverAgent.Error.Failed
+
+		void Release() [experimental]
+
+			This method gets called when the service daemon
+			unregisters the agent. An agent can use it to do
+			cleanup tasks. There is no need to unregister the
+			agent, because when this method gets called it has
+			already been unregistered.
+
+Fields		array{byte} EIR
+
+			This is EIR blob as described in Bluetooth Core
+			Specification 4.0 (Vol 3, Part C, chapter 8.1.6).
+			Used by SSP capable devices.
+
+		array{byte} nokia.com:bt
+
+			This is a proprietary extension blob used by some
+			Nokia Bluetooth 2.0 devices.
+
+		array{byte} WSC
+
+			This is a WiFi blob as described in WiFi Simple
+			Configuration Technical Specification v2.0.2.1-rev4.
+			(Annex L - Data Element Definitions)
+
+		string State
+
+			Carrier power state. This is a hint for handover agent
+			about power state of carrier on remote device. Agent
+			should also use it to inform neard about power state
+			of its own carrier (in RequestOOB reply). It is up to
+			agent to decide how to use this information.
+
+			This field may be present only if nokia.com:bt or
+			EIR field is also present.
+
+			Possible values are "active", "inactive", "activating".
+
+
+NDEFAgent hierarchy
+=======================
+
+Service		unique name
+Interface	org.neard.NDEFAgent
+Object path	freely definable
+
+Methods		void GetNDEF(dict values) [experimental]
+
+			This method gets called when the service daemon
+			found an NDEF matching the registered type.
+
+			The parameter is a dictionary where the keys are the
+			field names and the values are the actual fields.
+
+		void Release() [experimental]
+
+			This method gets called when the service daemon
+			unregisters the agent. An agent can use it to do
+			cleanup tasks. There is no need to unregister the
+			agent, because when this method gets called it has
+			already been unregistered.
+
+Fields		array{byte} NDEF
+
+			This is the raw NDEF data.
+
+		array{byte} Payload
+
+			This is the NDEF record payload.
+
+		object Record
+
+			This is a record object path.
