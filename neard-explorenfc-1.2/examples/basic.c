@@ -27,6 +27,11 @@
 
 #include "neardal.h"
 
+libvlc_instance_t * inst = NULL;
+libvlc_media_player_t *mp = NULL;
+char currentSong[64] = "";
+libvlc_event_manager_t *man;
+
 struct params
 {
 	gboolean debug;
@@ -92,6 +97,7 @@ static gint start_polling(params_t* pParams)
 			{
 				g_warning("Error %d when trying to power adapter %s (%s)\r\n", err, pAdapter->name, neardal_error_get_text(err));
 			}
+//        inst = libvlc_new (0, NULL);
 		}
 
 		if( pAdapter->polling == 0 )
@@ -123,17 +129,33 @@ static gint start_polling(params_t* pParams)
 
 	return 0; //OK
 }
+void event_man(const struct libvlc_event_t  * event, void *data)
+{
+g_printf("what");
+    g_printf( "type %s %s", event->type, libvlc_event_type_name (event->type));
+}
 
 static void play_song(char* filename) { //, FMOD_SYSTEM *system) {
      libvlc_media_t *m;
      //gboolean isPlaying;
-     libvlc_media_player_t *mp;
-     libvlc_instance_t * inst;
- 
-     const char *const opts[] = {"--aout=alsa"};
+          const char *const opts[] = {"--aout=alsa"};
      /* Load the VLC engine */
-     inst = libvlc_new (0,  opts);
- 
+     if (inst == NULL) {
+        inst = libvlc_new (0,  opts); 
+         }
+     if (mp != NULL) {
+ 	libvlc_media_player_stop (mp);
+        g_printf("%s %s", filename, currentSong);  
+        if(strcmp(filename, currentSong) == 0) {
+          strcpy(currentSong, "");
+          return;
+        }
+     	/* Free the media_player */
+        libvlc_media_player_release (mp);
+     }
+     
+     strcpy(currentSong, filename);      
+
      //FMOD_CHANNEL *channel = 0;
 
      //float* vol;
@@ -153,11 +175,6 @@ static void play_song(char* filename) { //, FMOD_SYSTEM *system) {
      /* Create a new item */
      //g_printf("\nTESTESTEST\n");
      strcat(basedir, filename);
-     g_printf("\ngot here\n");
-
-//        inst = libvlc_new (0, NULL);
-g_printf("\ngot here\n");
-
 
      g_printf("\nNow playing: %s\n", basedir);
 
@@ -176,6 +193,8 @@ g_printf("\ngot here\n");
 
      /* Create a media player playing environement */
      mp = libvlc_media_player_new_from_media (m);
+    //man = libvlc_media_player_event_manager( mp );
+    //libvlc_event_attach(man,libvlc_MediaPlayerStopped    ,event_man,NULL);
 
      /* No need to keep the media now */
      libvlc_media_release (m);
@@ -187,8 +206,8 @@ g_printf("\ngot here\n");
 //     params->isPlaying = TRUE;
     // sleep (100); /* Let it play a bit */
      	/* Stop playing */
-    // 	libvlc_media_player_stop (mp);
- 
+    // 	 libvlc_media_player_stop (mp);
+
      	/* Free the media_player */
     // 	libvlc_media_player_release (mp);
 
