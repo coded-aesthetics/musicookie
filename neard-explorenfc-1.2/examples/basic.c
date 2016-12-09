@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <vlc/vlc.h>
 #include <unistd.h>
-#include <fmod.h>
+//#include <fmod.h>
 
 #include "neardal.h"
 
@@ -32,16 +32,17 @@ struct params
 	gboolean debug;
 	gboolean keepPolling;
 	gchar* adapterObjectPath;
-	GMainLoop* pMainLoop;
+ 	GMainLoop* pMainLoop;
 	gint returnCode;
 	neardal_record* pRcd;
 	gchar* writeMessage;
 	gchar* messageType;
 	gchar* language;
 	gboolean copy;
-	gboolean isCopied;
+	gboolean isCopied;	
 };
 typedef struct params params_t;
+
 
 static gint start_polling(params_t* pParams)
 {
@@ -51,7 +52,7 @@ static gint start_polling(params_t* pParams)
 	int adaptersCount = 0;
 	char** adapterNamesArray = NULL;
 	err = neardal_get_adapters(&adapterNamesArray, &adaptersCount);
-	if( err == NEARDAL_ERROR_NO_ADAPTER )
+	if ( err == NEARDAL_ERROR_NO_ADAPTER )
 	{
 		g_printf("No adapter found\r\n");
 		return 1;
@@ -123,8 +124,81 @@ static gint start_polling(params_t* pParams)
 	return 0; //OK
 }
 
-static void dump_record(neardal_record* pRecord)
-{
+static void play_song(char* filename) { //, FMOD_SYSTEM *system) {
+     libvlc_media_t *m;
+     //gboolean isPlaying;
+     libvlc_media_player_t *mp;
+     libvlc_instance_t * inst;
+ 
+     const char *const opts[] = {"--aout=alsa"};
+     /* Load the VLC engine */
+     inst = libvlc_new (0,  opts);
+ 
+     //FMOD_CHANNEL *channel = 0;
+
+     //float* vol;
+
+     //FMOD_Channel_GetVolume(channel, vol);
+
+     //g_printf("test %f", vol);
+
+     //FMOD_Channel_SetVolume(channel, 1.000);
+     //FMOD_Channel_GetVolume(channel, vol);
+
+     //g_printf("test %f", vol);
+
+     //FMOD_System_Init(system, 1, FMOD_INIT_NORMAL, NULL);     
+     //g_printf("\n%s\n", filename);
+     char basedir[] = "file:///home/pi/songs/";
+     /* Create a new item */
+     //g_printf("\nTESTESTEST\n");
+     strcat(basedir, filename);
+     g_printf("\ngot here\n");
+
+//        inst = libvlc_new (0, NULL);
+g_printf("\ngot here\n");
+
+
+     g_printf("\nNow playing: %s\n", basedir);
+
+     m = libvlc_media_new_location (inst, basedir);
+     //m = libvlc_media_new_path (inst, "/path/to/test.mov");
+     
+     //int pid = execl("/usr/bin/omxplayer", "/usr/bin/omxplayer",  "/home/pi/tungg.mp3", (char*) NULL);
+     
+     //g_printf("%i", pid);
+
+     //FMOD_SOUND *dooropen;
+
+     //FMOD_RESULT resultat7 = FMOD_System_CreateStream(system, "/home/pi/tungg.mp3",FMOD_CREATESTREAM | FMOD_LOOP_OFF | FMOD_2D, 0, &dooropen);
+
+     //FMOD_System_PlaySound(system, dooropen, 0, false, &channel);
+
+     /* Create a media player playing environement */
+     mp = libvlc_media_player_new_from_media (m);
+
+     /* No need to keep the media now */
+     libvlc_media_release (m);
+
+     /* play the media_player */
+     libvlc_media_player_play (mp);
+    
+
+//     params->isPlaying = TRUE;
+    // sleep (100); /* Let it play a bit */
+     	/* Stop playing */
+    // 	libvlc_media_player_stop (mp);
+ 
+     	/* Free the media_player */
+    // 	libvlc_media_player_release (mp);
+
+    
+     //libvlc_release (inst);
+ 
+ }
+
+
+static void dump_record(neardal_record* pRecord) {
 	if( pRecord->name != NULL )
 	{
 		g_printf("Found record %s\r\n", pRecord->name);
@@ -152,6 +226,8 @@ static void dump_record(neardal_record* pRecord)
 	if( pRecord->representation != NULL )
 	{
 		g_printf("Title: \t%s\r\n", pRecord->representation);
+
+                play_song(pRecord->representation);
 	}
 
 	if( pRecord->action != NULL )
@@ -215,6 +291,8 @@ static gchar* bytes_to_str(GBytes* bytes)
 	}
 	return str;
 }
+
+
 
 static void dump_tag(neardal_tag* pTag)
 {
@@ -312,71 +390,13 @@ static void record_found(const char *recordName, void *pUserData)
 }
 
 
-static void play_song(char* uri, FMOD_SYSTEM *system) {
-     libvlc_instance_t * inst;
-     libvlc_media_player_t *mp;
-     libvlc_media_t *m;
-
-     FMOD_CHANNEL *channel = 0;
-
-     float* vol;
-
-     FMOD_Channel_GetVolume(channel, vol);
-
-     g_printf("test %f", vol);
-
-     FMOD_Channel_SetVolume(channel, 1.000);
-     FMOD_Channel_GetVolume(channel, vol);
-
-     g_printf("test %f", vol);
-
-     FMOD_System_Init(system, 1, FMOD_INIT_NORMAL, NULL);
-
-     /* Load the VLC engine */
-     inst = libvlc_new (0, NULL);
-
-     /* Create a new item */
-     m = libvlc_media_new_location (inst, "file:///home/pi/tungg.mp3");
-     //m = libvlc_media_new_path (inst, "/path/to/test.mov");
-     
-     //int pid = execl("/usr/bin/omxplayer", "/usr/bin/omxplayer",  "/home/pi/tungg.mp3", (char*) NULL);
-     
-     //g_printf("%i", pid);
-
-     FMOD_SOUND *dooropen;
-
-     FMOD_RESULT resultat7 = FMOD_System_CreateStream(system, "/home/pi/tungg.mp3",FMOD_CREATESTREAM | FMOD_LOOP_OFF | FMOD_2D, 0, &dooropen);
-
-     FMOD_System_PlaySound(system, dooropen, 0, false, &channel);
-
-     /* Create a media player playing environement */
-     //mp = libvlc_media_player_new_from_media (m);
-
-     /* No need to keep the media now */
-     //libvlc_media_release (m);
-
-     /* play the media_player */
-     //libvlc_media_player_play (mp);
-    
-     //sleep (100); /* Let it play a bit */
-    
-     /* Stop playing */
-     //libvlc_media_player_stop (mp);
- 
-     /* Free the media_player */
-     //libvlc_media_player_release (mp);
- 
-     //libvlc_release (inst);
- 
- }
 
 static void tag_found(const char *tagName, void *pUserData)
 {
 	g_printf("Tag found\r\n");
-        FMOD_SYSTEM *system;
-        FMOD_System_Create(&system);
-        play_song("test", system);
-
+        //FMOD_SYSTEM *system;
+        //FMOD_System_Create(&system);
+        
 	errorCode_t	err;
 	neardal_tag* pTag;
 	params_t* pParams = (params_t*) pUserData;
@@ -485,6 +505,10 @@ int main(int argc, char** argv)
 	params.language = "en";
 	params.copy = FALSE;
 	params.isCopied = FALSE;
+	
+               //isPlaying = FALSE;
+	//params.isPlaying = FALSE;
+       
 
 	//Parse options
 	const GOptionEntry entries[] =
