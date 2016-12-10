@@ -132,7 +132,7 @@ static gint start_polling(params_t* pParams)
 void event_man(const struct libvlc_event_t  * event, void *data)
 {
 g_printf("what");
-    g_printf( "type %s %s", event->type, libvlc_event_type_name (event->type));
+   // g_printf( "type %s %s", event->type, libvlc_event_type_name (event->type));
 }
 
 static void play_song(char* filename) { //, FMOD_SYSTEM *system) {
@@ -141,17 +141,18 @@ static void play_song(char* filename) { //, FMOD_SYSTEM *system) {
           const char *const opts[] = {"--aout=alsa"};
      /* Load the VLC engine */
      if (inst == NULL) {
-        inst = libvlc_new (0,  opts); 
+        inst = libvlc_new (1,  opts); 
          }
      if (mp != NULL) {
  	libvlc_media_player_stop (mp);
+        /* Free the media_player */
+        //libvlc_media_player_release (mp);
+
         g_printf("%s %s", filename, currentSong);  
         if(strcmp(filename, currentSong) == 0) {
           strcpy(currentSong, "");
           return;
         }
-     	/* Free the media_player */
-        libvlc_media_player_release (mp);
      }
      
      strcpy(currentSong, filename);      
@@ -171,7 +172,7 @@ static void play_song(char* filename) { //, FMOD_SYSTEM *system) {
 
      //FMOD_System_Init(system, 1, FMOD_INIT_NORMAL, NULL);     
      //g_printf("\n%s\n", filename);
-     char basedir[] = "file:///home/pi/songs/";
+     char basedir[128] = "file:///home/pi/songs/";
      /* Create a new item */
      //g_printf("\nTESTESTEST\n");
      strcat(basedir, filename);
@@ -194,7 +195,7 @@ static void play_song(char* filename) { //, FMOD_SYSTEM *system) {
      /* Create a media player playing environement */
      mp = libvlc_media_player_new_from_media (m);
     //man = libvlc_media_player_event_manager( mp );
-    //libvlc_event_attach(man,libvlc_MediaPlayerStopped    ,event_man,NULL);
+    //libvlc_event_attach(man,libvlc_MediaPlayerEndReached ,event_man,NULL);
 
      /* No need to keep the media now */
      libvlc_media_release (m);
@@ -609,8 +610,8 @@ int main(int argc, char** argv)
 	params.pMainLoop = g_main_loop_new(NULL, FALSE);
 
 	//Add tag found callback
-	neardal_set_cb_tag_found(tag_found, (gpointer)&params);
-	neardal_set_cb_dev_found(device_found, (gpointer)&params);
+	//neardal_set_cb_tag_found(tag_found, (gpointer)&params);
+	//neardal_set_cb_dev_found(device_found, (gpointer)&params);
 
 	//Add record found callback
 	neardal_set_cb_record_found(record_found, (gpointer)&params);
