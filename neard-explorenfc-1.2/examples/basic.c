@@ -130,7 +130,6 @@ void event_man(const struct libvlc_event_t  * event, void *data)
 
 static void play_song(char* filename) { 
      libvlc_media_t *m;
-     
      if (inst == NULL) {
         /* Load the VLC engine if not previously initialized */
         const char *const opts[] = {"--aout=alsa"};
@@ -165,6 +164,7 @@ static void play_song(char* filename) {
      /* been unsuccesfully trying to listen to end of playback event with the following lines */
      //man = libvlc_media_player_event_manager( mp );
      //libvlc_event_attach(man,libvlc_MediaPlayerEndReached ,event_man,NULL);
+     libvlc_audio_set_volume(mp, 100); 
 
      /* No need to keep the media now */
      libvlc_media_release (m);
@@ -269,6 +269,8 @@ int main(int argc, char** argv)
 	{
 		return params.returnCode;
 	}
+
+	play_song("lets-go.mp3");
 
 	g_printf("Waiting for tag or device...\r\n");
 
