@@ -130,27 +130,28 @@ void event_man(const struct libvlc_event_t  * event, void *data)
 
 static void play_song(char* filename) { 
      libvlc_media_t *m;
-     
      if (inst == NULL) {
         /* Load the VLC engine if not previously initialized */
+	g_printf("Loading the vlc engine \n");
         const char *const opts[] = {"--aout=alsa"};
         inst = libvlc_new (1,  opts); 
      }
      
-     if (mp != NULL) {
- 	libvlc_media_player_pause (mp);
-
+     if (mp) {
         if(strcmp(filename, currentSong) == 0) {
+          if (mp) {
+	    libvlc_media_player_pause (mp);
+          }
+
           /* if requested song is that same that is currently playing toggle pause */
           //strcpy(currentSong, ""); // this needs to be done if sound is to be stopped rather than paused
           g_printf("Toggling pause on %s\n", currentSong);
           return;
-        }
-        /* Free the media_player */
-        libvlc_media_player_release (mp);
+	}
      }
 
      /* register new song that is playing */
+     g_printf("Registering new song \n");
      strcpy(currentSong, filename);      
 
      char basedir[128] = "file:///home/pi/songs/";
@@ -159,12 +160,17 @@ static void play_song(char* filename) {
      g_printf("Now playing: %s\n", basedir);
 
      m = libvlc_media_new_location (inst, basedir);
+     if (mp) {
+       libvlc_media_player_release (mp);
+       mp = NULL;
+     }
 
      /* Create a media player playing environment */
      mp = libvlc_media_player_new_from_media (m);
      /* been unsuccesfully trying to listen to end of playback event with the following lines */
      //man = libvlc_media_player_event_manager( mp );
      //libvlc_event_attach(man,libvlc_MediaPlayerEndReached ,event_man,NULL);
+     libvlc_audio_set_volume(mp, 100); 
 
      /* No need to keep the media now */
      libvlc_media_release (m);
@@ -269,6 +275,8 @@ int main(int argc, char** argv)
 	{
 		return params.returnCode;
 	}
+
+	play_song("lets-go3.mp3");
 
 	g_printf("Waiting for tag or device...\r\n");
 
